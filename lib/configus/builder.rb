@@ -13,18 +13,35 @@ module Configus
 
     def env(name, options = {}, &block)
       @hash[name.to_sym] ||= options if options.any?
-      @current_key = name if block_given?
+      @current_key ||= []
+      @current_key << name if block_given?
       instance_eval &block if block_given?
       @hash
     end
 
     def method_missing (meth, *args, &block)
-      if @hash[@current_key]
-        @hash[@current_key].merge!({meth => args.first})
+      if block_given?
+        @current_key << meth
+        block.call
+      end
+      navigator
+    end
+
+    private
+    def add_value_to_hash(hash, meth, *args)
+      if hash
+        hash.merge!({meth => args.first})
       else
-        @hash[@current_key] = {meth => args.first}
+        hash = {meth => args.first}
       end
     end
 
+    def navigator
+      current_hash ||= @hash
+      @current_key.each do |key|
+        current_hash = current_hash[key] unless current_hash[key].nil?
+      end
+      p current_hash
+    end
   end
 end
