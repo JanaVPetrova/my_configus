@@ -22,4 +22,15 @@ describe Configus::Builder do
     expected_hash = { production: { website_url: "http://example.com"} }
     c.hash.must_equal expected_hash
   end
+
+  it "should have nested parametres" do
+    c = Configus::Builder.new
+    c.build :development do # set current environment
+      env :production do
+        website_url 'http://example.com'
+        email 'some@mail.com'
+      end
+    end
+    c.hash[:production][:website_url].must_equal "http://example.com"
+  end
 end
