@@ -18,11 +18,20 @@ module Configus
       @hash
     end
 
-    def method_missing (meth, *args, &block)
-      if @hash[@current_key]
-        @hash[@current_key].merge!({meth => args.first})
+    def method_missing(meth, *args, &block)
+      if block_given?
+        block.call
       else
-        @hash[@current_key] = {meth => args.first}
+        @hash[@current_key] ||= Hash.new
+        current_hash = @hash[@current_key]
+      end
+    end
+
+    def add(hash, meth, args)
+      if hash
+        hash.merge!({meth => args.first})
+      else
+        hash = {meth => args.first}
       end
     end
 

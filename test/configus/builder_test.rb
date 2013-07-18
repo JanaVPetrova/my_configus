@@ -23,7 +23,7 @@ describe Configus::Builder do
     c.hash.must_equal expected_hash
   end
 
-  it "should have nested parametres" do
+  it "should have many parametres" do
     c = Configus::Builder.new
     c.build :development do # set current environment
       env :production do
@@ -32,5 +32,21 @@ describe Configus::Builder do
       end
     end
     c.hash[:production][:website_url].must_equal "http://example.com"
+  end
+
+  it "should have nested parametres" do
+    c = Configus::Builder.new
+    c.build :development do # set current environment
+      env :production do
+        website_url 'http://example.com'
+        email 'some@mail.com'
+        pagination do
+          admin_per_page 50
+          audits_per_page 20
+        end
+      end
+    end
+    p c.hash
+    #c.hash[:production][:website_url].must_equal "http://example.com"
   end
 end
