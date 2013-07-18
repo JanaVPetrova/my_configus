@@ -14,4 +14,12 @@ describe Configus::Builder do
     @config.env(:develop, email: "admin@gmail.com").must_equal expected_hash
   end
 
+  it "should have blocks" do
+    c = Configus::Builder.new
+    c.build :development do
+      env :production, website_url: 'http://example.com'
+    end
+    expected_hash = { production: { website_url: "http://example.com"} }
+    c.hash.must_equal expected_hash
+  end
 end

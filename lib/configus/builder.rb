@@ -1,12 +1,13 @@
 module Configus
   class Builder
+    attr_reader :hash
 
     def initialize
       @hash = {}
     end
 
-    def build(env)
-      @hash[env.to_sym] = {}
+    def build(env, &block)
+      instance_eval &block if block_given?
       @hash 
     end
 
