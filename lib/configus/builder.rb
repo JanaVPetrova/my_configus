@@ -1,22 +1,34 @@
 module Configus
   class Builder
-    attr_reader :hash
-
     def initialize
-      @hash = {}
+      @settings = {}
+      @current_env
     end
 
     def build(env, &block)
+      @current_env = env
       instance_eval &block if block_given?
-      @hash[env]
+
+      if has_env? env
+        @settings[env]
+      else
+        raise "No environment: #{env}"
+      end
     end
 
+    private
     def env(name, options = {}, &block)
-      if options.has_key? :parent
-        @hash[name] = @hash[options[:parent]]
+      @settings[name] = Environment.new &block
+
+      define_singleton_method name do
+        @settings[name]
       end
-      env = Environment.new
-      @hash[name] = env.build(&block)
+
+      @settings
+    end
+
+    def has_env?(env)
+      @settings.has_key? env
     end
   end
 end
