@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash/deep_merge.rb'
+
 module Configus
   class Builder
     def initialize
@@ -17,6 +19,9 @@ module Configus
     private
     def env(name, options = {}, &block)
       @settings[name] = Environment.new.create_hash &block
+      if options.has_key? :parent
+        @settings[name] = @settings[options[:parent]].deep_merge @settings[name]
+      end
       @settings
     end
 

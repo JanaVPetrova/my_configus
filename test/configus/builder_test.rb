@@ -39,7 +39,7 @@ describe Configus::Builder do
     c.email.must_equal 'some@mail.com'
     c.pagination.admin_per_page.must_equal 50
   end
-=begin
+
   it "should have parent params" do
     c = Configus::Builder.new.build :development do # set current environment
       env :production do
@@ -62,7 +62,7 @@ describe Configus::Builder do
         some_new_param "new param"
       end
     end
-    c.email.one_more.must_equal "thing"
+    c.email.address.must_equal 'smpt.text.example.com'
+    c.smtp.port.must_equal 25
   end
-=end
 end
