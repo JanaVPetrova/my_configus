@@ -1,30 +1,19 @@
 require "test_helper"
 
 describe Configus::Builder do
-  before do
-    @config = Configus::Builder.new
-  end
-
-  it "should create hash" do
-    @config.build(:develop).must_be_kind_of Hash 
-  end
-
-  it "should add options to environment" do
-    expected_hash = {develop: {email: "admin@gmail.com"}}
-    @config.env(:develop, email: "admin@gmail.com").must_equal expected_hash
-  end
-
   it "should have blocks" do
-    c = Configus::Builder.new
+    c = Configus.new
     c.build :development do
-      env :production, website_url: 'http://example.com'
+      env :production do
+        website_url 'http://example.com'
+      end
     end
     expected_hash = { production: { website_url: "http://example.com"} }
     c.hash.must_equal expected_hash
   end
 
   it "should have many parametres" do
-    c = Configus::Builder.new
+    c = Configus.new
     c.build :development do # set current environment
       env :production do
         website_url 'http://example.com'
@@ -35,7 +24,7 @@ describe Configus::Builder do
   end
 
   it "should have nested parametres" do
-    c = Configus::Builder.new
+    c = Configus.new
     c.build :development do # set current environment
       env :production do
         website_url 'http://example.com'
@@ -46,7 +35,33 @@ describe Configus::Builder do
         end
       end
     end
-    p c.hash
-    #c.hash[:production][:website_url].must_equal "http://example.com"
+    expected_hash = { production: { website_url: "http://example.com", email: 'some@mail.com', pagination: {admin_per_page: 50, audits_per_page: 20}} }
+    c.hash.must_equal expected_hash
+  end
+
+  it "should have parent params" do
+    c = Configus.new
+    c.build :development do # set current environment
+      env :production do
+        website_url 'http://example.com'
+        email do
+          address 'pop.example.com'
+        end
+        smtp do
+          address 'smtp.example.com'
+          port    25
+        end
+      end
+
+      env :development, :parent => :production do
+        website_url 'http://text.example.com'
+        email do
+          address 'smpt.text.example.com'
+        end
+        some_new_param "new param"
+      end
+    end
+    expected_hash = { website_url: "http://text.example.com", email: {address: 'smpt.text.example.com'}, some_new_param: "new param"}
+    c.hash[:development].must_equal expected_hash
   end
 end
