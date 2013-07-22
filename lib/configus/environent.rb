@@ -1,7 +1,10 @@
 module Configus
   class Environment
-    def initialize(&block)
+    def initialize
       @env ||= {}
+    end
+
+    def create_hash(&block)
       instance_eval &block if block_given?
       @env
     end
@@ -10,10 +13,7 @@ module Configus
       if block.nil?
         @env[name] = args.first
       else
-        @env[name] =  Environment.new &block
-      end
-      define_singleton_method name do
-        @env[name]
+        @env[name] = Environment.new.create_hash &block
       end
     end
 

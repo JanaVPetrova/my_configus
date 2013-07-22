@@ -2,15 +2,13 @@ module Configus
   class Builder
     def initialize
       @settings = {}
-      @current_env
     end
 
     def build(env, &block)
-      @current_env = env
       instance_eval &block if block_given?
 
       if has_env? env
-        @settings[env]
+        Config.new(@settings[env])
       else
         raise "No environment: #{env}"
       end
@@ -18,12 +16,7 @@ module Configus
 
     private
     def env(name, options = {}, &block)
-      @settings[name] = Environment.new &block
-
-      define_singleton_method name do
-        @settings[name]
-      end
-
+      @settings[name] = Environment.new.create_hash &block
       @settings
     end
 
