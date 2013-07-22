@@ -2,7 +2,7 @@ require "test_helper"
 
 describe Configus::Builder do
   it "should have blocks" do
-    c = Configus::Builder.new.build :production do
+    c = Configus.build :production do
       env :production do
         website_url 'http://example.com'
       end
@@ -14,7 +14,7 @@ describe Configus::Builder do
   end
 
   it "should have many parametres" do
-    c = Configus::Builder.new.build :production do
+    c = Configus.build :production do
       env :production do
         website_url 'http://example.com'
         email 'some@mail.com'
@@ -25,7 +25,7 @@ describe Configus::Builder do
   end
 
   it "should have nested parametres" do
-    c = Configus::Builder.new.build :production do # set current environment
+    c = Configus.build :production do # set current environment
       env :production do
         website_url 'http://example.com'
         email 'some@mail.com'
@@ -41,7 +41,7 @@ describe Configus::Builder do
   end
 
   it "should have parent params" do
-    c = Configus::Builder.new.build :development do # set current environment
+    c = Configus.build :development do # set current environment
       env :production do
         website_url 'http://example.com'
         email do
