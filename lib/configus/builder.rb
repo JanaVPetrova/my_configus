@@ -12,7 +12,7 @@ module Configus
       if has_env? env
         Config.new(@settings[env])
       else
-        raise "No environment: #{env}"
+        raise Configus::NoEnvironmentError, "Environment '#{env}' does not exist"
       end
     end
 

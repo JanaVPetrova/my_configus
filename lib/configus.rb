@@ -5,7 +5,10 @@ module Configus
   require "configus/environent"
   require "configus/config"
 
+  class NoEnvironmentError < RuntimeError; end
+
   def self.build(*args, &block)
-    Configus::Builder.new.build(*args, &block)
+    @conf = Configus::Builder.new
+    @conf.build(*args, &block)
   end
 end

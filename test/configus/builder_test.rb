@@ -13,6 +13,15 @@ describe Configus::Builder do
     c.website_url.must_equal "http://example.com"
   end
 
+  it "should raise NoEnvironmentError" do
+    lambda { Configus.build :some_env do
+      env :production do
+        website_url 'http://example.com'
+        email 'some@mail.com'
+      end
+    end }.must_raise Configus::NoEnvironmentError
+  end
+
   it "should have many parametres" do
     c = Configus.build :production do
       env :production do
@@ -25,7 +34,7 @@ describe Configus::Builder do
   end
 
   it "should have nested parametres" do
-    c = Configus.build :production do # set current environment
+    c = Configus.build :production do
       env :production do
         website_url 'http://example.com'
         email 'some@mail.com'
@@ -41,7 +50,7 @@ describe Configus::Builder do
   end
 
   it "should have parent params" do
-    c = Configus.build :development do # set current environment
+    c = Configus.build :development do
       env :production do
         website_url 'http://example.com'
         email do
