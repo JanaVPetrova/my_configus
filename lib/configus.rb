@@ -1,9 +1,9 @@
 require "configus/version"
 
 module Configus
-  require "configus/builder"
-  require "configus/environent"
-  require "configus/config"
+  autoload 'Builder', "configus/builder"
+  autoload 'Environment', "configus/environent"
+  autoload 'Config', "configus/config"
 
   class NoEnvironmentError < RuntimeError; end
 
