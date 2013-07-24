@@ -23,5 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest"
   spec.add_development_dependency "coveralls"
 
-  spec.add_runtime_dependency "activesupport"
+  spec.add_runtime_dependency "activesupport", "~> 3.2.13"
 end
